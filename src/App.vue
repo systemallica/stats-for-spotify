@@ -4,6 +4,7 @@
       <router-link to="/">Dashboard</router-link> |
       <router-link to="/about">About</router-link>
     </div>
+    <h1>Stats for Spotify</h1>
     <router-view />
   </div>
 </template>
