@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "LogIn",
+  name: "Dashboard",
   data: function() {
     return {
       url:
@@ -15,7 +15,7 @@ export default {
         "response_type=code&" +
         "client_id=2d88e8cf069d40a69e97bc7a0db990a1&" +
         "scope=user-read-private user-read-email playlist-read-private&" +
-        "redirect_uri=http://192.168.0.156:8081/logged/&" +
+        "redirect_uri=http://192.168.0.156:8081/dashboard/&" +
         "state=123"
     }
   }
