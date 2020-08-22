@@ -69,8 +69,10 @@ export default {
       }
       const data = {
         code: this.code,
-        grant_type: "client_credentials"
+        grant_type: "authorization_code",
+        redirect_uri: redirect_uri
       }
+
       axios
         .post(
           "https://accounts.spotify.com/api/token",
@@ -79,7 +81,25 @@ export default {
         )
         .then(function(response) {
           console.log(response)
-          console.log(response.data.access_token)
+
+          const access_token = response.data.access_token
+
+          const headers = {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`
+            }
+          }
+
+          axios
+            .get("https://api.spotify.com/v1/me", headers)
+            .then(function(res) {
+              console.log(res)
+            })
+            .catch(function(err) {
+              console.log(err)
+            })
         })
         .catch(function(error) {
           console.log(error)
