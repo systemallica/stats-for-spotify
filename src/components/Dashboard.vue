@@ -4,8 +4,12 @@
       <h2>First, log in to Spotify</h2>
       <button><a v-bind:href="url">Log in</a></button>
     </div>
-    <div class="loading" v-else>
+    <div class="loading" v-else-if="!user">
       <h2>Loading...</h2>
+    </div>
+    <div class="user" v-else>
+      <h2>Hello {{ this.user.data.display_name }}!</h2>
+      <img v-bind:src="user.data.images[0].url" alt="Profile picture" />
     </div>
   </div>
 </template>
@@ -27,7 +31,8 @@ export default {
     return {
       code: undefined,
       state: undefined,
-      url: `${root}?response_type=${response_type}&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`
+      url: `${root}?response_type=${response_type}&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`,
+      user: undefined
     }
   },
   methods: {
@@ -37,7 +42,7 @@ export default {
       return Math.floor(Math.random() * (max - min + 1) + min)
     }
   },
-  created: function() {
+  created: async function() {
     const localStorage = window.localStorage
 
     // If first time, create state, otherwise read it
@@ -57,7 +62,7 @@ export default {
     // If both states match, request token and user data
     if (routeState === this.state) {
       // Request token
-      const headers = {
+      const options = {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
@@ -73,37 +78,29 @@ export default {
         redirect_uri: redirect_uri
       }
 
-      axios
-        .post(
-          "https://accounts.spotify.com/api/token",
-          qs.stringify(data),
+      const api_token = await axios.post(
+        "https://accounts.spotify.com/api/token",
+        qs.stringify(data),
+        options
+      )
+
+      const access_token = api_token.data.access_token
+
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`
+      }
+
+      const user_data = await axios.get("https://api.spotify.com/v1/me", {
+        headers
+      })
+      console.log(
+        await axios.get("https://api.spotify.com/v1/me", {
           headers
-        )
-        .then(function(response) {
-          console.log(response)
-
-          const access_token = response.data.access_token
-
-          const headers = {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${access_token}`
-            }
-          }
-
-          axios
-            .get("https://api.spotify.com/v1/me", headers)
-            .then(function(res) {
-              console.log(res)
-            })
-            .catch(function(err) {
-              console.log(err)
-            })
         })
-        .catch(function(error) {
-          console.log(error)
-        })
+      )
+      this.user = user_data
     }
   }
 }
