@@ -1,34 +1,27 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <span v-bind:title="msg">
-      Hover your mouse over me for a few seconds to see my dynamically bound
-      title!
-    </span>
-    <p>
-      For a guide and recipes on how to configure / customize this project,
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <div v-if="loggedIn">
-      User is logged in
-    </div>
+  <div id="login">
+    <h1>First, log in to spotify</h1>
+    <button><a v-bind:href="url">Log in</a></button>
   </div>
 </template>
 
 <script>
 export default {
   name: "LogIn",
-  props: {
-    msg: String
+  data: function() {
+    return {
+      url:
+        "https://accounts.spotify.com/authorize?" +
+        "response_type=code&" +
+        "client_id=2d88e8cf069d40a69e97bc7a0db990a1&" +
+        "scope=user-read-private user-read-email playlist-read-private&" +
+        "redirect_uri=http://192.168.0.156:8081/logged/&" +
+        "state=123"
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
