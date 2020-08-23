@@ -7,7 +7,7 @@
     <div class="user" v-else>
       <h2>Hello {{ this.user.profile.data.display_name }}!</h2>
       <img v-bind:src="user.profile.data.images[0].url" alt="Profile picture" />
-      <GenrePie />
+      <GenrePie v-bind:genres="user.genres" />
     </div>
   </div>
 </template>
@@ -133,8 +133,6 @@ export default {
       const profile = await this.getUserProfile(access_token)
 
       this.user = { genres, profile }
-      console.log(genres)
-      console.log(profile)
     }
   }
 }
