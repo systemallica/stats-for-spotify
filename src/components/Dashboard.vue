@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="login" v-if="!user">
+    <div class="login" v-if="!this.$store.state.user">
       <h2>First, log in to Spotify</h2>
       <button><a v-bind:href="url">Log in</a></button>
     </div>
     <div class="user" v-else>
       <img
         class="profile-picture"
-        v-bind:src="user.profile.data.images[0].url"
+        v-bind:src="this.$store.state.user.profile.data.images[0].url"
         alt="Profile picture"
       />
-      <h2>Hello {{ this.user.profile.data.display_name }}!</h2>
+      <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
       Here's a chart with your most listened genres:
-      <GenrePie v-bind:genres="user.genres" />
+      <GenrePie v-bind:genres="this.$store.state.user.genres" />
     </div>
   </div>
 </template>
@@ -109,35 +109,37 @@ export default {
     }
   },
   created: async function() {
-    const localStorage = window.localStorage
+    if (!this.$store.state.user) {
+      const localStorage = window.localStorage
 
-    // If first time, create state, otherwise read it
-    const storedState = localStorage.getItem("state")
-    if (storedState === null) {
-      this.state = this.generateRandomState(1, 100000)
-      localStorage.setItem("state", this.state)
-    } else {
-      this.state = localStorage.getItem("state")
-    }
-    this.url += `&state=${this.state}`
+      // If first time, create state, otherwise read it
+      const storedState = localStorage.getItem("state")
+      if (storedState === null) {
+        this.state = this.generateRandomState(1, 100000)
+        localStorage.setItem("state", this.state)
+      } else {
+        this.state = localStorage.getItem("state")
+      }
+      this.url += `&state=${this.state}`
 
-    // Read state and code from route, retourned by spotify after login
-    const routeState = this.$route.query.state
-    this.code = this.$route.query.code
+      // Read state and code from route, retourned by spotify after login
+      const routeState = this.$route.query.state
+      this.code = this.$route.query.code
 
-    // If both states match, request token and user data
-    if (routeState === this.state) {
-      // Request token
-      const access_token = await this.getToken()
+      // If both states match, request token and user data
+      if (routeState === this.state) {
+        // Request token
+        const access_token = await this.getToken()
 
-      // Request data
-      // Get genres from top artists
-      const genres = await this.getTopGenres(access_token)
+        // Request data
+        // Get genres from top artists
+        const genres = await this.getTopGenres(access_token)
 
-      // User profile
-      const profile = await this.getUserProfile(access_token)
+        // User profile
+        const profile = await this.getUserProfile(access_token)
 
-      this.user = { genres, profile }
+        this.$store.commit("saveUser", { genres, profile })
+      }
     }
   }
 }
