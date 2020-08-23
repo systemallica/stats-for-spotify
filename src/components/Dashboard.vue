@@ -2,7 +2,7 @@
   <div>
     <div class="login" v-if="!this.$store.state.user">
       <h2>First, log in to Spotify</h2>
-      <button><a v-bind:href="url">Log in</a></button>
+      <a class="login-btn" v-bind:href="url">Log in</a>
     </div>
     <div class="user" v-else>
       <img
@@ -149,8 +149,12 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
-a {
-  color: #42b983;
+.login-btn {
+  background-color: #42b983;
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 8px 18px;
+  color: white;
 }
 .profile-picture {
   width: 200px;
