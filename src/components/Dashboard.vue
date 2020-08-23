@@ -5,8 +5,13 @@
       <button><a v-bind:href="url">Log in</a></button>
     </div>
     <div class="user" v-else>
+      <img
+        class="profile-picture"
+        v-bind:src="user.profile.data.images[0].url"
+        alt="Profile picture"
+      />
       <h2>Hello {{ this.user.profile.data.display_name }}!</h2>
-      <img v-bind:src="user.profile.data.images[0].url" alt="Profile picture" />
+      Here's a chart with your most listened genres:
       <GenrePie v-bind:genres="user.genres" />
     </div>
   </div>
@@ -144,5 +149,9 @@ h3 {
 }
 a {
   color: #42b983;
+}
+.profile-picture {
+  width: 200px;
+  border-radius: 50%;
 }
 </style>
