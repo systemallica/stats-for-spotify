@@ -11,7 +11,7 @@
         alt="Profile picture"
       />
       <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
-      Here's a chart with your most listened genres:
+      <p>Here's a chart with your most listened genres:</p>
       <GenrePie v-bind:genres="this.$store.state.user.genres" />
     </div>
   </div>
