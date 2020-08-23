@@ -28,7 +28,7 @@ const response_type = "code"
 const client_id = process.env.VUE_APP_CLIENTID
 const client_secret = process.env.VUE_APP_CLIENTSECRET
 const scope = "user-read-private user-read-email user-top-read"
-const redirect_uri = "http://localhost:8080/dashboard/"
+const redirect_uri = `${process.env.VUE_APP_ROOT}/dashboard/`
 
 export default {
   name: "Dashboard",
