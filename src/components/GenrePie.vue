@@ -12,6 +12,29 @@
 <script>
 import VueApexCharts from "vue-apexcharts"
 
+const chartOptions = {
+  labels: undefined,
+  legend: {
+    formatter: function(seriesName, opts) {
+      return [seriesName, " - ", opts.w.globals.series[opts.seriesIndex]]
+    }
+  },
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 380
+        },
+        legend: {
+          height: 80,
+          position: "bottom"
+        }
+      }
+    }
+  ]
+}
+
 export default {
   name: "GenrePie",
   props: ["genres", "aggregate"],
@@ -69,29 +92,12 @@ export default {
     }
     const genresSorted = this.sortGenresByCount(genres)
     this.series = genresSorted.values
-    this.chartOptions.labels = genresSorted.keys
+    this.chartOptions = { ...chartOptions, labels: genresSorted.keys }
   },
   data: function() {
     return {
       series: undefined,
-      chartOptions: {
-        labels: undefined,
-        legend: {
-          formatter: function(seriesName, opts) {
-            return [seriesName, " - ", opts.w.globals.series[opts.seriesIndex]]
-          }
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: "bottom"
-              }
-            }
-          }
-        ]
-      }
+      chartOptions: chartOptions
     }
   },
   watch: {
@@ -102,7 +108,7 @@ export default {
       }
       const genresSorted = this.sortGenresByCount(genres)
       this.series = genresSorted.values
-      this.chartOptions = { labels: genresSorted.keys }
+      this.chartOptions = { ...chartOptions, labels: genresSorted.keys }
     }
   }
 }
