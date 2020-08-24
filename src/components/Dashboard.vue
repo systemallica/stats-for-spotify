@@ -12,7 +12,12 @@
       />
       <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
       <p>Here's a chart with your most listened genres:</p>
-      <GenrePie v-bind:genres="this.$store.state.user.genres" />
+      <input type="checkbox" id="checkbox" v-model="checked" />
+      <label for="checkbox">Aggregate genres</label>
+      <GenrePie
+        v-bind:genres="this.$store.state.user.genres"
+        v-bind:aggregate="checked"
+      />
     </div>
   </div>
 </template>
@@ -34,6 +39,16 @@ export default {
   name: "Dashboard",
   components: {
     GenrePie
+  },
+  computed: {
+    checked: {
+      get() {
+        return this.$store.state.checked
+      },
+      set(value) {
+        this.$store.commit("updateChecked", value)
+      }
+    }
   },
   data: function() {
     return {

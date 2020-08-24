@@ -14,12 +14,44 @@ import VueApexCharts from "vue-apexcharts"
 
 export default {
   name: "GenrePie",
-  props: ["genres"],
+  props: ["genres", "aggregate"],
   components: {
     apexchart: VueApexCharts
   },
+  computed: {
+    aggregateGenres: function() {
+      const categories = [
+        "rock",
+        "indie",
+        "pop",
+        "metal",
+        "jazz",
+        "hip hop",
+        "reggae",
+        "r&b",
+        "latin",
+        "reggaeton"
+      ]
+      let countTotal = 0
+      let countAgg = 0
+      return Object.keys(this.genres).reduce((aggGenres, genre) => {
+        countTotal += this.genres[genre]
+        for (const category of categories) {
+          if (genre.indexOf(category) != -1) {
+            countAgg += this.genres[genre]
+            if (aggGenres[category]) {
+              aggGenres[category] += this.genres[genre]
+            } else {
+              aggGenres[category] = this.genres[genre]
+            }
+          }
+        }
+        aggGenres["others"] = countTotal - countAgg
+        return aggGenres
+      }, {})
+    }
+  },
   methods: {
-    aggregateGenres: function(genres, granularity) {},
     sortGenresByCount: function(genres) {
       const keysSorted = Object.keys(genres).sort(function(a, b) {
         return genres[b] - genres[a]
@@ -31,7 +63,11 @@ export default {
     }
   },
   created: function() {
-    const genresSorted = this.sortGenresByCount(this.genres)
+    let genres = this.genres
+    if (this.aggregate) {
+      genres = this.aggregateGenres
+    }
+    const genresSorted = this.sortGenresByCount(genres)
     this.series = genresSorted.values
     this.chartOptions.labels = genresSorted.keys
   },
@@ -56,6 +92,17 @@ export default {
           }
         ]
       }
+    }
+  },
+  watch: {
+    aggregate: function() {
+      let genres = this.genres
+      if (this.aggregate) {
+        genres = this.aggregateGenres
+      }
+      const genresSorted = this.sortGenresByCount(genres)
+      this.series = genresSorted.values
+      this.chartOptions = { labels: genresSorted.keys }
     }
   }
 }

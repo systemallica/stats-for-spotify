@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: undefined
+    user: undefined,
+    checked: true
   },
 
   getters: {},
@@ -13,6 +14,9 @@ export default new Vuex.Store({
   mutations: {
     saveUser(state, user) {
       state.user = user
+    },
+    updateChecked(state, checked){
+      state.checked = checked
     }
   },
 
