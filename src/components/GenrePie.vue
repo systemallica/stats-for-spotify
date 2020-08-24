@@ -53,7 +53,12 @@ export default {
         "reggae",
         "r&b",
         "latin",
-        "reggaeton"
+        "reggaeton",
+        "punk",
+        "electronic",
+        "dance",
+        "soul",
+        "grunge"
       ]
       let countTotal = 0
       let countAgg = 0
