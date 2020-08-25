@@ -20,6 +20,8 @@
       />
       <h3>Here are your top tracks:</h3>
       <TopTracks v-bind:tracks="this.$store.state.user.tracks" />
+      <h3>Here are your top artists:</h3>
+      <TopArtists v-bind:artists="this.$store.state.user.artists" />
     </div>
   </div>
 </template>
@@ -29,6 +31,7 @@ import axios from "axios"
 import qs from "qs"
 
 import GenrePie from "./GenrePie.vue"
+import TopArtists from "./TopArtists.vue"
 import TopTracks from "./TopTracks.vue"
 
 const root = "https://accounts.spotify.com/authorize"
@@ -42,6 +45,7 @@ export default {
   name: "Dashboard",
   components: {
     GenrePie,
+    TopArtists,
     TopTracks
   },
   computed: {

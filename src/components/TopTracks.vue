@@ -19,13 +19,6 @@
 export default {
   name: "TopTracks",
   props: ["tracks"],
-  computed: {},
-  created: function() {
-    console.log(this.tracks.data.items[0])
-  },
-  data: function() {
-    return {}
-  },
   methods: {
     millisToMinutesAndSeconds: function(ms) {
       var minutes = Math.floor(ms / 60000)
