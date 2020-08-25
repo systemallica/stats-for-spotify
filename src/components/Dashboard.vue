@@ -29,11 +29,11 @@ import qs from "qs"
 import GenrePie from "./GenrePie.vue"
 
 const root = "https://accounts.spotify.com/authorize"
-const response_type = "code"
-const client_id = process.env.VUE_APP_CLIENTID
-const client_secret = process.env.VUE_APP_CLIENTSECRET
+const responseType = "code"
+const clientId = process.env.VUE_APP_CLIENTID
+const clientSecret = process.env.VUE_APP_CLIENTSECRET
 const scope = "user-read-private user-read-email user-top-read"
-const redirect_uri = `${process.env.VUE_APP_ROOT}/dashboard/`
+const redirectUri = `${process.env.VUE_APP_ROOT}/dashboard/`
 
 export default {
   name: "Dashboard",
@@ -54,8 +54,7 @@ export default {
     return {
       code: undefined,
       state: undefined,
-      url: `${root}?response_type=${response_type}&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`,
-      user: undefined
+      url: `${root}?response_type=${responseType}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}`
     }
   },
   methods: {
@@ -68,57 +67,59 @@ export default {
       const data = {
         code: this.code,
         grant_type: "authorization_code",
-        redirect_uri: redirect_uri
+        redirect_uri: redirectUri
       }
-      const api_token = await axios({
+      const apiToken = await axios({
         method: "post",
         url: "https://accounts.spotify.com/api/token",
         data: qs.stringify(data),
         auth: {
-          username: client_id,
-          password: client_secret
+          username: clientId,
+          password: clientSecret
         },
         headers: {
           Accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
         }
       })
-      return api_token.data.access_token
+      return apiToken.data["access_token"]
     },
-    getUserProfile: function(access_token) {
+    getUserProfile: function(accessToken) {
       return axios({
         method: "get",
         url: "https://api.spotify.com/v1/me",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`
+          Authorization: `Bearer ${accessToken}`
         }
       })
     },
-    getTopGenres: async function(access_token) {
-      const top_artists = await axios({
+    getTop: async function(accessToken, mode) {
+      return await axios({
         method: "get",
-        url: "https://api.spotify.com/v1/me/top/artists",
+        url: `https://api.spotify.com/v1/me/top/${mode}`,
         params: {
           limit: 50
         },
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`
+          Authorization: `Bearer ${accessToken}`
         }
       })
+    },
+    getTopGenres: function(topArtists) {
       // Get genres from top artists
-      const genres = top_artists.data.items.reduce((genre_dict, item) => {
+      const genres = topArtists.data.items.reduce((genreDict, item) => {
         for (const genre of item.genres) {
-          if (genre_dict[genre]) {
-            genre_dict[genre] += 1
+          if (genreDict[genre]) {
+            genreDict[genre] += 1
           } else {
-            genre_dict[genre] = 1
+            genreDict[genre] = 1
           }
         }
-        return genre_dict
+        return genreDict
       }, {})
       return genres
     }
@@ -144,16 +145,20 @@ export default {
       // If both states match, request token and user data
       if (routeState === this.state) {
         // Request token
-        const access_token = await this.getToken()
+        const accessToken = await this.getToken()
 
         // Request data
         // Get genres from top artists
-        const genres = await this.getTopGenres(access_token)
+        const artists = await this.getTop(accessToken, "artists")
+        const genres = this.getTopGenres(artists)
+
+        // Top tracks
+        const tracks = await this.getTop(accessToken, "tracks")
 
         // User profile
-        const profile = await this.getUserProfile(access_token)
+        const profile = await this.getUserProfile(accessToken)
 
-        this.$store.commit("saveUser", { genres, profile })
+        this.$store.commit("saveUser", { artists, genres, profile, tracks })
       }
     }
   }
