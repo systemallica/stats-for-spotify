@@ -15,6 +15,7 @@ import VueApexCharts from "vue-apexcharts"
 const chartOptions = {
   labels: undefined,
   legend: {
+    width: 140,
     formatter: function(seriesName, opts) {
       return [seriesName, " - ", opts.w.globals.series[opts.seriesIndex]]
     }
