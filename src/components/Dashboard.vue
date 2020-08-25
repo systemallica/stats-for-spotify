@@ -11,13 +11,15 @@
         alt="Profile picture"
       />
       <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
-      <p>Here's a chart with your most listened genres:</p>
+      <h3>Here's a chart with your most listened genres:</h3>
       <input type="checkbox" id="checkbox" v-model="checked" />
       <label for="checkbox">Aggregate genres</label>
       <GenrePie
         v-bind:genres="this.$store.state.user.genres"
         v-bind:aggregate="checked"
       />
+      <h3>Here are your top tracks:</h3>
+      <TopTracks v-bind:tracks="this.$store.state.user.tracks" />
     </div>
   </div>
 </template>
@@ -27,6 +29,7 @@ import axios from "axios"
 import qs from "qs"
 
 import GenrePie from "./GenrePie.vue"
+import TopTracks from "./TopTracks.vue"
 
 const root = "https://accounts.spotify.com/authorize"
 const responseType = "code"
@@ -38,7 +41,8 @@ const redirectUri = `${process.env.VUE_APP_ROOT}/dashboard/`
 export default {
   name: "Dashboard",
   components: {
-    GenrePie
+    GenrePie,
+    TopTracks
   },
   computed: {
     checked: {
@@ -167,7 +171,7 @@ export default {
 
 <style scoped>
 h3 {
-  margin: 40px 0 0;
+  margin: 25px;
 }
 .login-btn {
   background-color: #42b983;
