@@ -28,6 +28,7 @@ const chartOptions = {
           width: 380
         },
         legend: {
+          width: "100%",
           height: 80,
           position: "bottom"
         }
@@ -124,5 +125,6 @@ export default {
 .chart {
   display: flex;
   justify-content: center;
+  text-align: start;
 }
 </style>
