@@ -10,6 +10,24 @@
 </template>
 
 <style>
+body {
+  font-family: Circular, Helvetica, Arial, sans-serif;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+}
+h2 {
+  font-size: 36px;
+  font-weight: 900;
+}
+h3 {
+  font-size: 24px;
+  font-weight: 900;
+  margin: 25px;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -28,6 +46,6 @@
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #1db954;
 }
 </style>

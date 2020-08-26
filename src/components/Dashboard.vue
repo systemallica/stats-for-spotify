@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="login" v-if="!this.$store.state.user">
       <h2>First, log in to Spotify</h2>
       <a class="login-btn" v-bind:href="url">Log in</a>
@@ -167,6 +167,7 @@ export default {
         const profile = await this.getUserProfile(accessToken)
 
         this.$store.commit("saveUser", { artists, genres, profile, tracks })
+        this.$router.push({ path: "/" })
       }
     }
   }
@@ -174,15 +175,31 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 25px;
+.container {
+  display: flex;
+  justify-content: center;
 }
 .login-btn {
-  background-color: #42b983;
-  border-radius: 5px;
+  background-color: #1db954;
+  font-size: 16px;
+  border-radius: 500px;
   text-decoration: none;
-  padding: 8px 18px;
-  color: white;
+  padding: 19px 56px 21px;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+}
+.login-btn:hover {
+  color: #fff;
+  background-color: #1ed760;
 }
 .profile-picture {
   width: 200px;
