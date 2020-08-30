@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <div class="card" v-for="artist in artists.data.items" :key="artist.id">
+    <div
+      class="card"
+      v-for="artist in artists.data.items"
+      :key="artist.id"
+      @click="openUri(artist.uri)"
+    >
       <img v-bind:src="artist.images[2].url" alt="Artist picture" />
       <div class="artist-info">
         <div>{{ artist.name }}</div>
@@ -17,6 +22,11 @@
 export default {
   name: "TopArtists",
   props: ["artists"],
+  methods: {
+    openUri: function(uri) {
+      window.open(uri)
+    }
+  }
 }
 </script>
 
@@ -27,6 +37,9 @@ export default {
   justify-content: center;
 }
 .card {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
   display: flex;
   width: 300px;
   align-items: center;
