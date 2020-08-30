@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "TopArtists",
-  props: ["artists"]
+  props: ["artists"],
 }
 </script>
 

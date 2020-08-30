@@ -1,7 +1,19 @@
 <template>
   <div class="container">
     <div class="card" v-for="track in tracks.data.items" :key="track.id">
-      <img v-bind:src="track.album.images[2].url" alt="Album cover" />
+      <img
+        v-if="track.preview_url"
+        @click="toggleAudio(track.preview_url)"
+        class="media-btn"
+        :src="getBtnImage(track.preview_url)"
+        alt="Media button"
+      />
+      <div class="dummy" v-else></div>
+      <img
+        class="cover"
+        v-bind:src="track.album.images[2].url"
+        alt="Album cover"
+      />
       <div class="track-info">
         <div>{{ track.name }}</div>
         <div>
@@ -19,11 +31,38 @@
 export default {
   name: "TopTracks",
   props: ["tracks"],
+  data: function() {
+    return { audio: undefined, nowPlaying: undefined }
+  },
   methods: {
+    getBtnImage: function(url) {
+      var images = require.context("../assets/", false, /\.png$/)
+      if (this.nowPlaying === url) {
+        return images("./" + "pause" + ".png")
+      } else {
+        return images("./" + "play" + ".png")
+      }
+    },
     millisToMinutesAndSeconds: function(ms) {
       var minutes = Math.floor(ms / 60000)
       var seconds = ((ms % 60000) / 1000).toFixed(0)
       return minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+    },
+    toggleAudio: function(url) {
+      if (this.nowPlaying === url) {
+        this.audio.paused ? this.audio.play() : this.audio.pause()
+      } else if (this.audio) {
+        this.audio.pause()
+        this.createAudio(url)
+      } else {
+        this.createAudio(url)
+      }
+    },
+    createAudio: function(url) {
+      this.nowPlaying = url
+      this.audio = new Audio(url)
+      this.audio.play()
+      this.audio.loop = true
     }
   }
 }
@@ -43,14 +82,26 @@ export default {
   border-radius: 16px;
   border: 1px solid #ccc;
 }
+.dummy {
+  width: 32px !important;
+}
+.media-btn {
+  height: 24px;
+  width: 24px !important;
+  margin-left: 6px;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+}
 .track-info {
+  max-width: 180px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   margin-left: 10px;
 }
-img {
+.cover {
   margin: 6px 0px 6px 8px;
   height: 64px;
 }
