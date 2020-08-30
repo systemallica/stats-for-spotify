@@ -4,22 +4,25 @@
       <img
         v-if="track.preview_url"
         @click="toggleAudio(track.preview_url)"
-        class="media-btn"
+        class="clickable media-btn"
         :src="getBtnImage(track.preview_url)"
         alt="Media button"
       />
       <div class="dummy" v-else></div>
       <img
-        class="cover"
+        @click="openUri(track.album.uri)"
+        class="clickable cover"
         v-bind:src="track.album.images[2].url"
         alt="Album cover"
       />
       <div class="track-info">
-        <div>{{ track.name }}</div>
+        <div class="clickable" @click="openUri(track.uri)">
+          {{ track.name }}
+        </div>
         <div>
           {{ millisToMinutesAndSeconds(track.duration_ms) }}
         </div>
-        <div>
+        <div class="clickable" @click="openUri(track.artists[0].uri)">
           {{ track.artists[0].name }}
         </div>
       </div>
@@ -47,6 +50,9 @@ export default {
       var minutes = Math.floor(ms / 60000)
       var seconds = ((ms % 60000) / 1000).toFixed(0)
       return minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+    },
+    openUri: function(uri) {
+      window.open(uri)
     },
     toggleAudio: function(url) {
       if (this.nowPlaying === url) {
@@ -95,9 +101,6 @@ export default {
   height: 24px;
   width: 24px !important;
   margin-left: 6px;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
 }
 .track-info {
   max-width: 180px;
@@ -110,5 +113,10 @@ export default {
 .cover {
   margin: 6px 0px 6px 8px;
   height: 64px;
+}
+.clickable {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
 }
 </style>
