@@ -50,7 +50,13 @@ export default {
     },
     toggleAudio: function(url) {
       if (this.nowPlaying === url) {
-        this.audio.paused ? this.audio.play() : this.audio.pause()
+        if (this.audio.paused) {
+          this.audio.play()
+          this.nowPlaying = url
+        } else {
+          this.audio.pause()
+          this.nowPlaying = undefined
+        }
       } else if (this.audio) {
         this.audio.pause()
         this.createAudio(url)
