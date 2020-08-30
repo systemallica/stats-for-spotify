@@ -1,10 +1,14 @@
 <template>
   <div class="container">
-    <div class="card" v-for="track in tracks.data.items" :key="track.id">
+    <div
+      class="clickable card"
+      @click="toggleAudio(track.preview_url)"
+      v-for="track in tracks.data.items"
+      :key="track.id"
+    >
       <img
         v-if="track.preview_url"
-        @click="toggleAudio(track.preview_url)"
-        class="clickable media-btn"
+        class="media-btn"
         :src="getBtnImage(track.preview_url)"
         alt="Media button"
       />
@@ -93,6 +97,9 @@ export default {
   margin: 5px;
   border-radius: 16px;
   border: 1px solid #ccc;
+}
+.card:hover {
+  background-color: #f1f1f1;
 }
 .dummy {
   width: 32px !important;

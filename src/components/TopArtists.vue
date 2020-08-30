@@ -47,6 +47,9 @@ export default {
   border-radius: 16px;
   border: 1px solid #ccc;
 }
+.card:hover {
+  background-color: #f1f1f1;
+}
 .artist-info {
   display: flex;
   flex-direction: column;
