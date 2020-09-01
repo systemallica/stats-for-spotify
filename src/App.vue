@@ -12,21 +12,23 @@
 <style>
 body {
   font-family: Circular, Helvetica, Arial, sans-serif;
-  letter-spacing: -0.04em;
   line-height: 1.15;
 }
 h1 {
   font-size: 48px;
   font-weight: 900;
+  letter-spacing: -0.04em;
 }
 h2 {
   font-size: 36px;
   font-weight: 900;
+  letter-spacing: -0.04em;
 }
 h3 {
   font-size: 24px;
   font-weight: 900;
   margin: 25px;
+  letter-spacing: -0.04em;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
