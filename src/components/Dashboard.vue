@@ -14,10 +14,7 @@
       <h3>Here's a chart with your most listened genres:</h3>
       <input type="checkbox" id="checkbox" v-model="checked" />
       <label for="checkbox">Aggregate genres</label>
-      <GenrePie
-        v-bind:genres="this.$store.state.user.genres"
-        v-bind:aggregate="checked"
-      />
+      <GenrePie v-bind:genres="this.$store.state.user.genres" v-bind:aggregate="checked" />
       <h3>Here are your top tracks:</h3>
       <TopTracks v-bind:tracks="this.$store.state.user.tracks" />
       <h3>Here are your top artists:</h3>
@@ -58,7 +55,7 @@ export default {
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       code: undefined,
       state: undefined,
@@ -66,12 +63,12 @@ export default {
     }
   },
   methods: {
-    generateRandomState: function(min, max) {
+    generateRandomState: function (min, max) {
       min = Math.ceil(min)
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min + 1) + min)
     },
-    getToken: async function() {
+    getToken: async function () {
       const data = {
         code: this.code,
         grant_type: "authorization_code",
@@ -92,7 +89,7 @@ export default {
       })
       return apiToken.data["access_token"]
     },
-    getUserProfile: function(accessToken) {
+    getUserProfile: async function (accessToken) {
       return axios({
         method: "get",
         url: "https://api.spotify.com/v1/me",
@@ -103,7 +100,7 @@ export default {
         }
       })
     },
-    getTop: async function(accessToken, mode) {
+    getTop: async function (accessToken, mode) {
       return await axios({
         method: "get",
         url: `https://api.spotify.com/v1/me/top/${mode}`,
@@ -117,7 +114,7 @@ export default {
         }
       })
     },
-    getTopGenres: function(topArtists) {
+    getTopGenres: function (topArtists) {
       // Get genres from top artists
       const genres = topArtists.data.items.reduce((genreDict, item) => {
         for (const genre of item.genres) {
@@ -132,7 +129,7 @@ export default {
       return genres
     }
   },
-  created: async function() {
+  created: async function () {
     if (!this.$store.state.user) {
       const localStorage = window.localStorage
 
