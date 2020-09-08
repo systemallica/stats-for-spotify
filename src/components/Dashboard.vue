@@ -1,8 +1,11 @@
 <template>
   <div class="container">
-    <div class="login" v-if="!this.$store.state.user">
+    <div class="login" v-if="!this.$store.state.user && !loading">
       <h2>First, log in to Spotify</h2>
       <a class="login-btn" v-bind:href="url">Log in</a>
+    </div>
+    <div v-else-if="loading">
+      <ScaleLoader :loading="true" :color="'#1db954'" :size="'180px'" />
     </div>
     <div class="user" v-else>
       <img
@@ -14,7 +17,10 @@
       <h3>Here's a chart with your most listened genres:</h3>
       <input type="checkbox" id="checkbox" v-model="checked" />
       <label for="checkbox">Aggregate genres</label>
-      <GenrePie v-bind:genres="this.$store.state.user.genres" v-bind:aggregate="checked" />
+      <GenrePie
+        v-bind:genres="this.$store.state.user.genres"
+        v-bind:aggregate="checked"
+      />
       <h3>Here are your top tracks:</h3>
       <TopTracks v-bind:tracks="this.$store.state.user.tracks" />
       <h3>Here are your top artists:</h3>
@@ -26,6 +32,7 @@
 <script>
 import axios from "axios"
 import qs from "qs"
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue"
 
 import GenrePie from "./GenrePie.vue"
 import TopArtists from "./TopArtists.vue"
@@ -42,6 +49,7 @@ export default {
   name: "Dashboard",
   components: {
     GenrePie,
+    ScaleLoader,
     TopArtists,
     TopTracks
   },
@@ -55,20 +63,21 @@ export default {
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       code: undefined,
+      loading: false,
       state: undefined,
       url: `${root}?response_type=${responseType}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}`
     }
   },
   methods: {
-    generateRandomState: function (min, max) {
+    generateRandomState: function(min, max) {
       min = Math.ceil(min)
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min + 1) + min)
     },
-    getToken: async function () {
+    getToken: async function() {
       const data = {
         code: this.code,
         grant_type: "authorization_code",
@@ -89,7 +98,7 @@ export default {
       })
       return apiToken.data["access_token"]
     },
-    getUserProfile: async function (accessToken) {
+    getUserProfile: async function(accessToken) {
       return axios({
         method: "get",
         url: "https://api.spotify.com/v1/me",
@@ -100,7 +109,7 @@ export default {
         }
       })
     },
-    getTop: async function (accessToken, mode) {
+    getTop: async function(accessToken, mode) {
       return await axios({
         method: "get",
         url: `https://api.spotify.com/v1/me/top/${mode}`,
@@ -114,7 +123,7 @@ export default {
         }
       })
     },
-    getTopGenres: function (topArtists) {
+    getTopGenres: function(topArtists) {
       // Get genres from top artists
       const genres = topArtists.data.items.reduce((genreDict, item) => {
         for (const genre of item.genres) {
@@ -129,7 +138,7 @@ export default {
       return genres
     }
   },
-  created: async function () {
+  created: async function() {
     if (!this.$store.state.user) {
       const localStorage = window.localStorage
 
@@ -149,6 +158,8 @@ export default {
 
       // If both states match, request token and user data
       if (routeState === this.state) {
+        this.loading = true
+
         // Request token
         const accessToken = await this.getToken()
 
@@ -165,6 +176,7 @@ export default {
 
         this.$store.commit("saveUser", { artists, genres, profile, tracks })
         this.$router.push({ path: "/" })
+        this.loading = false
       }
     }
   }
