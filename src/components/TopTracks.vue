@@ -20,15 +20,15 @@
         alt="Album cover"
       />
       <div class="track-info">
-        <div class="clickable" @click="openUri(track.uri)">
+        <a class="clickable" @click="openUri(track.uri)">
           {{ track.name }}
-        </div>
+        </a>
         <div>
           {{ millisToMinutesAndSeconds(track.duration_ms) }}
         </div>
-        <div class="clickable" @click="openUri(track.artists[0].uri)">
+        <a class="clickable" @click="openUri(track.artists[0].uri)">
           {{ track.artists[0].name }}
-        </div>
+        </a>
       </div>
     </div>
   </div>
@@ -125,5 +125,8 @@ export default {
   -ms-touch-action: manipulation;
   touch-action: manipulation;
   cursor: pointer;
+}
+a.clickable:hover {
+  text-decoration: underline;
 }
 </style>
