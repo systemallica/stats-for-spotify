@@ -1,24 +1,16 @@
-import Vuex from "vuex"
-import Vue from "vue"
+import { createStore } from "vuex"
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export const store = createStore({
   state: {
     user: undefined,
     checked: true
   },
-
-  getters: {},
-
   mutations: {
     saveUser(state, user) {
       state.user = user
     },
-    updateChecked(state, checked){
+    updateChecked(state, checked) {
       state.checked = checked
     }
-  },
-
-  actions: {}
+  }
 })
