@@ -6,7 +6,13 @@
   ],
   "hashedBranchLength": 50,
   "branchPrefix": "-",
-  "vulnerabilityAlerts": {
-    "enabled": false
-  }
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "patch",
+        "peerDependencies"
+      ],
+      "automerge": true
+    }
+  ]
 }
