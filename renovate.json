@@ -5,14 +5,14 @@
     "schedule:weekly"
   ],
   "hashedBranchLength": 50,
-  "branchPrefix": "-",
-  "packageRules": [
-    {
-      "matchUpdateTypes": [
-        "patch",
-        "peerDependencies"
-      ],
-      "automerge": true
-    }
-  ]
+  "branchPrefix": "renovate-",
+  "lockFileConfig": {
+    "automerge": "any"
+  },
+  "devDependencies": {
+    "automerge": [
+      "minor",
+      "patch"
+    ]
+  }
 }
