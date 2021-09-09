@@ -4,5 +4,6 @@
     "group:all",
     "schedule:weekly"
   ],
-  "hashedBranchLength": 50
+  "hashedBranchLength": 50,
+  "branchPrefix": "-"
 }
