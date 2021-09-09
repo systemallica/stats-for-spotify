@@ -5,5 +5,8 @@
     "schedule:weekly"
   ],
   "hashedBranchLength": 50,
-  "branchPrefix": "-"
+  "branchPrefix": "-",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  }
 }
