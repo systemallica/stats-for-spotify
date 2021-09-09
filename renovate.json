@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "config:base",
+    "group:all",
+    "schedule:weekly"
+  ],
+  "hashedBranchLength": 50,
+  "branchPrefix": "-",
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "patch",
+        "peerDependencies"
+      ],
+      "automerge": true
+    }
+  ]
+}
