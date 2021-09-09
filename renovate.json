@@ -6,13 +6,21 @@
   ],
   "hashedBranchLength": 50,
   "branchPrefix": "renovate-",
-  "lockFileConfig": {
-    "automerge": "any"
-  },
-  "devDependencies": {
-    "automerge": [
-      "minor",
-      "patch"
-    ]
+  "packageRules": [
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": [
+        "lockFile"
+      ],
+      "automerge": true
+    }
+  ],
+  "lockFileMaintenance": {
+    "automerge": true
   }
 }
