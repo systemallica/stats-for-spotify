@@ -1,14 +1,14 @@
 import { createWebHistory, createRouter } from "vue-router"
 
-import Dashboard from "../components/Dashboard.vue"
-import NotFound from "../views/NotFound.vue"
+import DashboardView from "../components/Dashboard.vue"
+import NotFoundPage from "../views/NotFoundPage.vue"
 
 const routes = [
   { path: "/", redirect: "/dashboard" },
   {
     path: "/dashboard",
     name: "Dashboard",
-    component: Dashboard
+    component: DashboardView
   },
   {
     path: "/about",
@@ -17,12 +17,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "about" */ "../views/AboutPage.vue")
   },
   {
     path: "/:match(.*)*",
     name: "NotFound",
-    component: NotFound
+    component: NotFoundPage
   }
 ]
 

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div
-      v-if="!this.$store.state.user && !loading"
+      v-if="!$store.state.user && !loading"
       class="login"
     >
       <h2>First, log in to Spotify</h2>
@@ -23,10 +23,10 @@
     >
       <img
         class="profile-picture"
-        :src="this.$store.state.user.profile.data.images[0].url"
+        :src="$store.state.user.profile.data.images[0].url"
         alt="Profile picture"
       >
-      <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
+      <h2>Hello {{ $store.state.user.profile.data.display_name }}!</h2>
       <h3>Here's a chart with your most listened genres:</h3>
       <input
         id="checkbox"
@@ -35,13 +35,13 @@
       >
       <label for="checkbox">Aggregate genres</label>
       <GenrePie
-        :genres="this.$store.state.user.genres"
+        :genres="$store.state.user.genres"
         :aggregate="checked"
       />
       <h3>Here are your top tracks:</h3>
-      <TopTracks :tracks="this.$store.state.user.tracks" />
+      <TopTracks :tracks="$store.state.user.tracks" />
       <h3>Here are your top artists:</h3>
-      <TopArtists :artists="this.$store.state.user.artists" />
+      <TopArtists :artists="$store.state.user.artists" />
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ const scope = "user-read-private user-read-email user-top-read"
 const redirectUri = `${process.env.VUE_APP_ROOT}/dashboard/`
 
 export default {
-  name: "Dashboard",
+  name: "DashboardView",
   components: {
     GenrePie,
     ScaleLoader,
