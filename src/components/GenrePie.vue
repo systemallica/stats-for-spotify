@@ -5,7 +5,7 @@
       width="580"
       :options="chartOptions"
       :series="series"
-    ></apexchart>
+    />
   </div>
 </template>
 
@@ -39,9 +39,24 @@ const chartOptions = {
 
 export default {
   name: "GenrePie",
-  props: ["genres", "aggregate"],
   components: {
     apexchart: VueApexCharts
+  },
+  props: {
+    genres: {
+      type: Object,
+      required: true
+    },
+    aggregate: {
+      type: Boolean,
+      required: true
+    }
+  },
+  data: function() {
+    return {
+      series: undefined,
+      chartOptions: chartOptions
+    }
   },
   computed: {
     aggregateGenres: function() {
@@ -81,15 +96,15 @@ export default {
       }, {})
     }
   },
-  methods: {
-    sortGenresByCount: function(genres) {
-      const keysSorted = Object.keys(genres).sort(function(a, b) {
-        return genres[b] - genres[a]
-      })
-      const valuesSorted = keysSorted.map(key => {
-        return genres[key]
-      })
-      return { keys: keysSorted, values: valuesSorted }
+  watch: {
+    aggregate: function() {
+      let genres = this.genres
+      if (this.aggregate) {
+        genres = this.aggregateGenres
+      }
+      const genresSorted = this.sortGenresByCount(genres)
+      this.series = genresSorted.values
+      this.chartOptions = { ...chartOptions, labels: genresSorted.keys }
     }
   },
   created: function() {
@@ -101,21 +116,15 @@ export default {
     this.series = genresSorted.values
     this.chartOptions = { ...chartOptions, labels: genresSorted.keys }
   },
-  data: function() {
-    return {
-      series: undefined,
-      chartOptions: chartOptions
-    }
-  },
-  watch: {
-    aggregate: function() {
-      let genres = this.genres
-      if (this.aggregate) {
-        genres = this.aggregateGenres
-      }
-      const genresSorted = this.sortGenresByCount(genres)
-      this.series = genresSorted.values
-      this.chartOptions = { ...chartOptions, labels: genresSorted.keys }
+  methods: {
+    sortGenresByCount: function(genres) {
+      const keysSorted = Object.keys(genres).sort(function(a, b) {
+        return genres[b] - genres[a]
+      })
+      const valuesSorted = keysSorted.map(key => {
+        return genres[key]
+      })
+      return { keys: keysSorted, values: valuesSorted }
     }
   }
 }

@@ -3,8 +3,8 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ["plugin:vue/essential", "eslint:recommended"],
-  plugins: ["only-warn", "vue"],
+  extends: ["plugin:vue/recommended", "eslint:recommended"],
+  plugins: ["vue"],
   parserOptions: {
     parser: "babel-eslint"
   }

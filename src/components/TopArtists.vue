@@ -1,12 +1,15 @@
 <template>
   <div class="container">
     <div
-      class="card"
       v-for="artist in artists.data.items"
       :key="artist.id"
+      class="card"
       @click="openUri(artist.uri)"
     >
-      <img v-bind:src="artist.images[2].url" alt="Artist picture" />
+      <img
+        :src="artist.images[2].url"
+        alt="Artist picture"
+      >
       <div class="artist-info">
         <div>{{ artist.name }}</div>
         <div>Popularity score: {{ artist.popularity }}</div>
@@ -21,7 +24,12 @@
 <script>
 export default {
   name: "TopArtists",
-  props: ["artists"],
+  props: {
+    artists: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
     openUri: function(uri) {
       window.open(uri)
