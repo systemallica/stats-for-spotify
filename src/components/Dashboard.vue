@@ -1,30 +1,47 @@
 <template>
   <div class="container">
-    <div class="login" v-if="!this.$store.state.user && !loading">
+    <div
+      v-if="!$store.state.user && !loading"
+      class="login"
+    >
       <h2>First, log in to Spotify</h2>
-      <a class="login-btn" v-bind:href="url">Log in</a>
+      <a
+        class="login-btn"
+        :href="url"
+      >Log in</a>
     </div>
     <div v-else-if="loading">
-      <ScaleLoader :loading="true" :color="'#1db954'" :size="'180px'" />
+      <ScaleLoader
+        :loading="true"
+        :color="'#1db954'"
+        :size="'180px'"
+      />
     </div>
-    <div class="user" v-else>
+    <div
+      v-else
+      class="user"
+    >
       <img
         class="profile-picture"
-        v-bind:src="this.$store.state.user.profile.data.images[0].url"
+        :src="$store.state.user.profile.data.images[0].url"
         alt="Profile picture"
-      />
-      <h2>Hello {{ this.$store.state.user.profile.data.display_name }}!</h2>
+      >
+      <h2>Hello {{ $store.state.user.profile.data.display_name }}!</h2>
       <h3>Here's a chart with your most listened genres:</h3>
-      <input type="checkbox" id="checkbox" v-model="checked" />
+      <input
+        id="checkbox"
+        v-model="checked"
+        type="checkbox"
+      >
       <label for="checkbox">Aggregate genres</label>
       <GenrePie
-        v-bind:genres="this.$store.state.user.genres"
-        v-bind:aggregate="checked"
+        :genres="$store.state.user.genres"
+        :aggregate="checked"
       />
       <h3>Here are your top tracks:</h3>
-      <TopTracks v-bind:tracks="this.$store.state.user.tracks" />
+      <TopTracks :tracks="$store.state.user.tracks" />
       <h3>Here are your top artists:</h3>
-      <TopArtists v-bind:artists="this.$store.state.user.artists" />
+      <TopArtists :artists="$store.state.user.artists" />
     </div>
   </div>
 </template>
@@ -46,12 +63,20 @@ const scope = "user-read-private user-read-email user-top-read"
 const redirectUri = `${process.env.VUE_APP_ROOT}/dashboard/`
 
 export default {
-  name: "Dashboard",
+  name: "DashboardView",
   components: {
     GenrePie,
     ScaleLoader,
     TopArtists,
     TopTracks
+  },
+  data: function() {
+    return {
+      code: undefined,
+      loading: false,
+      state: undefined,
+      url: `${root}?response_type=${responseType}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}`
+    }
   },
   computed: {
     checked: {
@@ -63,12 +88,46 @@ export default {
       }
     }
   },
-  data: function() {
-    return {
-      code: undefined,
-      loading: false,
-      state: undefined,
-      url: `${root}?response_type=${responseType}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}`
+  created: async function() {
+    if (!this.$store.state.user) {
+      const localStorage = window.localStorage
+
+      // If first time, create state, otherwise read it
+      const storedState = localStorage.getItem("state")
+      if (storedState === null) {
+        this.state = this.generateRandomState(1, 100000)
+        localStorage.setItem("state", this.state)
+      } else {
+        this.state = localStorage.getItem("state")
+      }
+      this.url += `&state=${this.state}`
+
+      // Read state and code from route, retourned by spotify after login
+      const routeState = this.$route.query.state
+      this.code = this.$route.query.code
+
+      // If both states match, request token and user data
+      if (routeState === this.state) {
+        this.loading = true
+
+        // Request token
+        const accessToken = await this.getToken()
+
+        // Request data
+        // Get genres from top artists
+        const artists = await this.getTop(accessToken, "artists")
+        const genres = this.getTopGenres(artists)
+
+        // Top tracks
+        const tracks = await this.getTop(accessToken, "tracks")
+
+        // User profile
+        const profile = await this.getUserProfile(accessToken)
+
+        this.$store.commit("saveUser", { artists, genres, profile, tracks })
+        this.$router.push({ path: "/" })
+        this.loading = false
+      }
     }
   },
   methods: {
@@ -136,48 +195,6 @@ export default {
         return genreDict
       }, {})
       return genres
-    }
-  },
-  created: async function() {
-    if (!this.$store.state.user) {
-      const localStorage = window.localStorage
-
-      // If first time, create state, otherwise read it
-      const storedState = localStorage.getItem("state")
-      if (storedState === null) {
-        this.state = this.generateRandomState(1, 100000)
-        localStorage.setItem("state", this.state)
-      } else {
-        this.state = localStorage.getItem("state")
-      }
-      this.url += `&state=${this.state}`
-
-      // Read state and code from route, retourned by spotify after login
-      const routeState = this.$route.query.state
-      this.code = this.$route.query.code
-
-      // If both states match, request token and user data
-      if (routeState === this.state) {
-        this.loading = true
-
-        // Request token
-        const accessToken = await this.getToken()
-
-        // Request data
-        // Get genres from top artists
-        const artists = await this.getTop(accessToken, "artists")
-        const genres = this.getTopGenres(artists)
-
-        // Top tracks
-        const tracks = await this.getTop(accessToken, "tracks")
-
-        // User profile
-        const profile = await this.getUserProfile(accessToken)
-
-        this.$store.commit("saveUser", { artists, genres, profile, tracks })
-        this.$router.push({ path: "/" })
-        this.loading = false
-      }
     }
   }
 }

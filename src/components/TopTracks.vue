@@ -1,34 +1,47 @@
 <template>
   <div class="container">
     <div
-      class="clickable card"
-      @click="toggleAudio(track.preview_url)"
       v-for="track in tracks.data.items"
       :key="track.id"
+      @click="toggleAudio(track.preview_url)"
     >
-      <img
-        v-if="track.preview_url"
-        class="media-btn"
-        :src="getBtnImage(track.preview_url)"
-        alt="Media button"
-      />
-      <div class="dummy" v-else></div>
-      <img
-        @click="openUri(track.album.uri)"
-        class="clickable cover"
-        v-bind:src="track.album.images[2].url"
-        alt="Album cover"
-      />
-      <div class="track-info">
-        <a class="clickable" @click="openUri(track.uri)">
-          {{ track.name }}
-        </a>
-        <div>
-          {{ millisToMinutesAndSeconds(track.duration_ms) }}
+      <div
+        v-if="track.album.images[2]"
+        class="clickable card"
+      >
+        <img
+          v-if="track.preview_url"
+          class="media-btn"
+          :src="getBtnImage(track.preview_url)"
+          alt="Media button"
+        >
+        <div
+          v-else
+          class="dummy"
+        />
+        <img
+          class="clickable cover"
+          :src="track.album.images[2].url"
+          alt="Album cover"
+          @click="openUri(track.album.uri)"
+        >
+        <div class="track-info">
+          <a
+            class="clickable"
+            @click="openUri(track.uri)"
+          >
+            {{ track.name }}
+          </a>
+          <div>
+            {{ millisToMinutesAndSeconds(track.duration_ms) }}
+          </div>
+          <a
+            class="clickable"
+            @click="openUri(track.artists[0].uri)"
+          >
+            {{ track.artists[0].name }}
+          </a>
         </div>
-        <a class="clickable" @click="openUri(track.artists[0].uri)">
-          {{ track.artists[0].name }}
-        </a>
       </div>
     </div>
   </div>
@@ -37,7 +50,12 @@
 <script>
 export default {
   name: "TopTracks",
-  props: ["tracks"],
+  props: {
+    tracks: {
+      type: Object,
+      required: true
+    }
+  },
   data: function() {
     return { audio: undefined, nowPlaying: undefined }
   },
