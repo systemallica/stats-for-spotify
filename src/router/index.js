@@ -1,9 +1,7 @@
-import Vue from "vue"
-import VueRouter from "vue-router"
+import { createWebHistory, createRouter } from "vue-router"
+
 import Dashboard from "../components/Dashboard.vue"
 import NotFound from "../views/NotFound.vue"
-
-Vue.use(VueRouter)
 
 const routes = [
   { path: "/", redirect: "/dashboard" },
@@ -22,14 +20,14 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
-    path: "*",
+    path: "/:match(.*)*",
     name: "NotFound",
     component: NotFound
   }
 ]
 
-const router = new VueRouter({
-  mode: "history",
+var router = createRouter({
+  history: createWebHistory(),
   base: process.env.BASE_URL,
   routes
 })

@@ -12,22 +12,18 @@
     "apexcharts": "^3.32.1",
     "axios": "^0.24.0",
     "core-js": "^3.20.2",
-    "vue": "^2.6.14",
-    "vue-apexcharts": "^1.6.2",
-    "vue-router": "^3.5.3",
+    "vue": "^3.2.6",
+    "vue-router": "^4.0.12",
     "vue-spinner": "^1.0.4",
-    "vuex": "^3.6.2"
+    "vue3-apexcharts": "^1.4.1",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.4",
-    "@vue/cli-plugin-eslint": "~4.5.4",
-    "@vue/cli-plugin-router": "^4.5.4",
-    "@vue/cli-service": "~4.5.4",
+    "@vue/cli-service": "~4.5.15",
+    "@vue/compiler-sfc": "^3.2.6",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "eslint-plugin-only-warn": "^1.0.2",
-    "vue-template-compiler": "^2.6.14"
+    "eslint-plugin-vue": "^6.2.2"
   },
   "browserslist": [
     "> 1%",
