@@ -12,7 +12,7 @@
     "apexcharts": "^3.32.1",
     "axios": "^0.24.0",
     "core-js": "^3.20.2",
-    "vue": "^3.2.6",
+    "vue": "^3.2.30",
     "vue-router": "^4.0.12",
     "vue-spinner": "^1.0.4",
     "vue3-apexcharts": "^1.4.1",
